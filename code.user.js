@@ -8,8 +8,8 @@
 // @grant        none
 // @homepageURL  https://github.com/Citrinate/awa-script
 // @supportURL   https://github.com/Citrinate/awa-script/issues
-// @downloadURL  https://raw.githubusercontent.com/Citrinate/awa-script/main/code.user.js
-// @updateURL    https://raw.githubusercontent.com/Citrinate/awa-script/main/code.user.js
+// @downloadURL  https://github.com/Citrinate/awa-script/raw/main/code.user.js
+// @updateURL    https://github.com/Citrinate/awa-script/raw/main/code.user.js
 // ==/UserScript==
 
 (function() {
