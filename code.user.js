@@ -15,26 +15,43 @@
 (function() {
     'use strict';
 
-    // Enable artifact swapping interface even when artifacts can't be swapped
-    document.querySelectorAll(".modal-slot.disabled").forEach(x => x.classList.toggle("disabled"));
-
     // Add countdown timer indicating when artifacts can we swapped out
-    let artifact_equip_times = Object.values(artifactsData.userActiveArtifacts).map(x => Date.parse(x.equippedAt.date + "UTC"));
     document.querySelectorAll(".artifact-block > .slots > .slot").forEach((slot, index) => {
-        let artifact_replaceable_at = artifact_equip_times[index] + 86400000;
-        let countdown_div = document.createElement("div");
-        countdown_div.style.cssText = "text-align: center; margin-top: 16px;"
-        slot.appendChild(countdown_div);
 
-        setInterval(() => {
+        let slot_countdown = document.createElement("div");
+        slot_countdown.style.cssText = "text-align: center; margin-top: 16px;"
+        slot.appendChild(slot_countdown);
+
+        let modal_slot = document.querySelectorAll(".modal-slot")[index];
+        let modal_slot_countdown = document.createElement("div");
+        modal_slot_countdown.style.cssText = "position: absolute; background: rgba(0, 0, 0, .85); width: 100%; padding-top: 4px; text-align: center; bottom: 0px;";
+        if (modal_slot) {
+            modal_slot.appendChild(modal_slot_countdown);
+        }
+
+        let artifact_data = artifactsData.userActiveArtifacts[index + 1];
+        if (!artifact_data) {
+            return;
+        }
+
+        let artifact_equip_time = Date.parse(artifact_data.equippedAt.date + "UTC");
+        let artifact_replaceable_at = artifact_equip_time + 86400000;
+        let interval_id = setInterval(() => {
             let seconds_remaining = Math.ceil(Math.max(0, (artifact_replaceable_at - new Date().getTime()) / 1000));
-            let s = (new Date(seconds_remaining * 1000).toISOString().substr(11, 8)); // https://stackoverflow.com/a/70781722
 
             if (seconds_remaining == 0) {
-                countdown_div.innerHTML = "";
-            } else {
-                countdown_div.innerHTML = `Replaceable in ${s}`;
+                slot.removeChild(slot_countdown);
+                modal_slot.removeChild(modal_slot_countdown);
+                modal_slot.classList.remove("disabled"); // enable the swap button
+                clearInterval(interval_id);
+
+                return;
             }
+
+            let s = (new Date(seconds_remaining * 1000).toISOString().substring(11, 19)); // https://stackoverflow.com/a/70781722
+
+            slot_countdown.innerHTML = `Replaceable in ${s}`;
+            modal_slot_countdown.innerHTML = s;
         }, 1000);
     });
 })();
