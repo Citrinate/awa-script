@@ -1,5 +1,7 @@
 # AWA Script
 
+A userscript for Alienware Arena
+
 Features:
 
 * Adds a countdown timer indicating when Artifacts can be swapped out
