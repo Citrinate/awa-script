@@ -39,9 +39,30 @@
         currentPage = PAGE_VAULT;
     }
 
+    // https://stackoverflow.com/a/61511955
+    function WaitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    observer.disconnect();
+                    resolve(document.querySelector(selector));
+                }
+            });
+
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+
     if (currentPage == PAGE_ARTIFACT) {
         // Add countdown timer indicating when artifacts can we swapped out
-        window.addEventListener("load", function CreateArtifactTimer() {
+        WaitForElm('.artifact-block').then(function CreateArtifactTimer() {
 
             document.querySelectorAll(".artifact-block > .slots > .slot").forEach((slot, index) => {
                 let modalSlot = document.querySelectorAll(".modal-slot")[index];
