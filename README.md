@@ -12,3 +12,11 @@ Features:
 
 1. Install a userscript manager like [Tampermonkey](https://www.tampermonkey.net/), [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/), or [Violentmonkey](https://violentmonkey.github.io/)
 2. Go [here](https://github.com/Citrinate/awa-script/raw/main/code.user.js) and click "Install"
+
+## Screenshots
+
+![Artifact Countdown](https://raw.githubusercontent.com/Citrinate/awa-script/main/Screenshots/artifacts_1.png)
+
+![Artifact Countdown](https://raw.githubusercontent.com/Citrinate/awa-script/main/Screenshots/artifacts_2.png)
+
+![Vault Countdown](https://raw.githubusercontent.com/Citrinate/awa-script/main/Screenshots/vault.png)
