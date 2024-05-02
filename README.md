@@ -2,8 +2,9 @@
 
 Features:
 
-* Adds a countdown timer indicating when artifacts can we swapped out
-* Adds a countdown timer indicating when the game vault will open
+* Adds a countdown timer indicating when Artifacts can be swapped out
+* Adds a countdown timer indicating when the Game Vault will open
+* Gives you the option to browse the site without earning "Time on Site" ARP
 
 ## Installation
 
