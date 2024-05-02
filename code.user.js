@@ -76,15 +76,12 @@
 
 	let WaitForTrue = function(func){
 		return new Promise(resolve => {
-			let intervalID;
-			intervalID = setInterval(function waitForInitCheck() {
-				if (!func()) {
-					return waitForInitCheck;
+			let intervalID = setInterval(() => {
+				if (func()) {
+					clearInterval(intervalID);
+					resolve();
 				}
-
-				clearInterval(intervalID);
-				resolve();
-			}(), 100);
+			}, 100);
 		});
 	}
 
@@ -99,7 +96,8 @@
 	//#endregion
 
 	if (currentPage == PAGE_ARTIFACT) {
-		//#region Add countdown timer indicating when artifacts can we swapped out
+		//#region Artifact Countdown
+		// Add countdown timer indicating when artifacts can we swapped out
 		WaitForElm('.artifact-block').then(() => {
 
 			document.querySelectorAll(".artifact-block > .slots > .slot").forEach((slot, index) => {
@@ -159,7 +157,8 @@
 	}
 
 	if (currentPage == PAGE_VAULT) {
-		//#region Add countdown timer indicating when the game vault will open
+		//#region Vault Countdown
+		// Add countdown timer indicating when the game vault will open
 		WaitForElm('.marketplace-sidebar-text').then((marketplaceSidebar) => {
 
 			//#region UI
@@ -203,14 +202,14 @@
 	}
 
 	if (currentPage == PAGE_TWITCH_EXT) {
-		//#region Provide easy access to jkmartindale's Twitch Quest Fixer
+		//#region Twitch Fix
+		// Provide easy access to jkmartindale's Twitch Quest Fixer
 		WaitForTrue(() => typeof authToken != "undefined" && typeof clientId != "undefined" && typeof pollDuration != "undefined").then(() => {
 
 			//#region UI
 			let twitchFixButton = document.createElement("div");
 			twitchFixButton.style.cssText = "color: #fff; cursor: pointer; margin: 8px 16px; padding: 8px 16px; display: inline-block; border: 1px solid white; box-shadow: 2px 2px 0px white;";
 			twitchFixButton.innerText = "Enable Twitch Quest Fixer";
-			twitchFixButton.onclick = () => { twitchFixButton.style.display = "none"; twitchFixEnabled.style.display = "inline-block"; TwitchFix(); };
 			document.body.appendChild(twitchFixButton);
 
 			let twitchFixEnabled = document.createElement("div");
@@ -263,11 +262,18 @@
 				};
 				handlePolling()
 			}
+
+			twitchFixButton.onclick = () => { 
+				twitchFixButton.style.display = "none"; 
+				twitchFixEnabled.style.display = "inline-block"; 
+				TwitchFix(); 
+			};
 		});
 		//#endregion
 	}
 
-	//#region Allow for the possibility to disable Time on Site earnings
+	//#region Time on Site Toggle
+	// Allow for the possibility to disable Time on Site earnings
 	// Time on Site earnings stop for the day after reaching the max, even if you later increase the max
 	// So this is useful if you plan on swapping in the Time on Site artifact and want to get the full benefit
 	if (currentPage != PAGE_TWITCH_EXT && typeof GM_webRequest == "function") {
@@ -280,20 +286,16 @@
 		let tosToggleEnabled = document.createElement("div");
 		tosToggleEnabled.innerText = "Time on Site Enabled";
 		tosToggleEnabled.style.cssText = "cursor: pointer; color: #fff; display: none; padding: 8px 16px 4px; box-shadow: 2px 2px 0px white;";
-		tosToggleEnabled.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
 		tosToggleParent.appendChild(tosToggleEnabled);
 
 		let tosToggleDisabled = document.createElement("div");
 		tosToggleDisabled.innerText = "Time on Site Disabled";
 		tosToggleDisabled.style.cssText = "cursor: pointer; color: red; font-weight: bold; display: none; padding: 8px 16px 4px; box-shadow: 2px 2px 0px red;";
-		tosToggleDisabled.onclick = () => { UpdateTimeOnSiteToggle(false, true); };
 		tosToggleParent.appendChild(tosToggleDisabled);
 
-		let tosWasBlocked = false; // Once TOS has been blocked once, the page will need to be reloaded to re-enable it
 		let tosToggleReload = document.createElement("div");
 		tosToggleReload.innerText = "Reload page to enable TOS";
 		tosToggleReload.style.cssText = "cursor: pointer; font-weight: bold; color: #fff; display: none; padding: 8px 16px 4px; box-shadow: 2px 2px 0px white;";
-		tosToggleReload.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
 		tosToggleParent.appendChild(tosToggleReload);
 		//#endregion
 
@@ -330,6 +332,12 @@
 				}
 			}
 		};
+
+		tosToggleEnabled.onclick = () => UpdateTimeOnSiteToggle(true, true);
+		tosToggleReload.onclick = () => UpdateTimeOnSiteToggle(true, true);
+		tosToggleDisabled.onclick = () => UpdateTimeOnSiteToggle(false, true);
+
+		let tosWasBlocked = false; // Once TOS has been blocked once, the page will need to be reloaded to re-enable it
 
 		let disableTOS;
 		UpdateTimeOnSiteToggle(GetSetting(SETTING_DISABLE_TOS));
