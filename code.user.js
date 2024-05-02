@@ -143,71 +143,73 @@
     // Allow for the possibility to disable Time on Site earnings
     // Time on Site earnings stop for the day after reaching the max, even if you later increase the max
     // So this is useful if you plan on swapping in the Time on Site artifact and want to get the full benefit
-    (function ToggleTimeOnSite() {
+    if (typeof GM_webRequest == "function") {
+        (function ToggleTimeOnSite() {
 
-        let tosToggleParent = document.createElement("div");
-        tosToggleParent.style.cssText = "position: fixed; bottom: 50px; right: 20px; text-align: center; border: 1px solid";
-        document.addEventListener("DOMContentLoaded", function() { document.body.appendChild(tosToggleParent); });
+            let tosToggleParent = document.createElement("div");
+            tosToggleParent.style.cssText = "position: fixed; bottom: 50px; right: 20px; text-align: center; border: 1px solid";
+            document.addEventListener("DOMContentLoaded", function() { document.body.appendChild(tosToggleParent); });
 
-            let tosToggleEnabled = document.createElement("div");
-            tosToggleEnabled.innerText = "Time on Site Enabled";
-            tosToggleEnabled.style.cssText = "cursor: pointer; color: #fff; display: none; padding: 8px 16px 4px;";
-            tosToggleEnabled.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
-            tosToggleParent.appendChild(tosToggleEnabled);
+                let tosToggleEnabled = document.createElement("div");
+                tosToggleEnabled.innerText = "Time on Site Enabled";
+                tosToggleEnabled.style.cssText = "cursor: pointer; color: #fff; display: none; padding: 8px 16px 4px;";
+                tosToggleEnabled.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
+                tosToggleParent.appendChild(tosToggleEnabled);
 
-            let tosToggleDisabled = document.createElement("div");
-            tosToggleDisabled.innerText = "Time on Site Disabled";
-            tosToggleDisabled.style.cssText = "cursor: pointer; color: red; font-weight: bold; display: none; padding: 8px 16px 4px;";
-            tosToggleDisabled.onclick = () => { UpdateTimeOnSiteToggle(false, true); };
-            tosToggleParent.appendChild(tosToggleDisabled);
+                let tosToggleDisabled = document.createElement("div");
+                tosToggleDisabled.innerText = "Time on Site Disabled";
+                tosToggleDisabled.style.cssText = "cursor: pointer; color: red; font-weight: bold; display: none; padding: 8px 16px 4px;";
+                tosToggleDisabled.onclick = () => { UpdateTimeOnSiteToggle(false, true); };
+                tosToggleParent.appendChild(tosToggleDisabled);
 
-            // Once TOS has been blocked once, the page will need to be reloaded to re-enable it
-            let tosWasBlocked = false;
-            let tosToggleReload = document.createElement("div");
-            tosToggleReload.innerText = "Reload page to enable TOS";
-            tosToggleReload.style.cssText = "cursor: pointer; font-weight: bold; color: #fff; display: none; padding: 8px 16px 4px;";
-            tosToggleReload.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
-            tosToggleParent.appendChild(tosToggleReload);
+                // Once TOS has been blocked once, the page will need to be reloaded to re-enable it
+                let tosWasBlocked = false;
+                let tosToggleReload = document.createElement("div");
+                tosToggleReload.innerText = "Reload page to enable TOS";
+                tosToggleReload.style.cssText = "cursor: pointer; font-weight: bold; color: #fff; display: none; padding: 8px 16px 4px;";
+                tosToggleReload.onclick = () => { UpdateTimeOnSiteToggle(true, true); };
+                tosToggleParent.appendChild(tosToggleReload);
 
-        function UpdateTimeOnSiteToggle(newState, saveSettings) {
-            if (disableTOS == newState) {
-                return;
-            }
-
-            saveSettings = saveSettings ?? false;
-            if (saveSettings) {
-                SetSetting(SETTING_DISABLE_TOS, newState)
-            }
-
-            disableTOS = newState;
-
-            GM_webRequest([{ selector: '*/tos/track', action: { cancel: disableTOS }}], function() {
-                tosWasBlocked = true;
-                tosToggleParent.style.borderWidth = "2px";
-            });
-
-            tosToggleEnabled.style.display = "none";
-            tosToggleDisabled.style.display = "none";
-            tosToggleReload.style.display = "none";
-
-            if (disableTOS) {
-                tosToggleDisabled.style.display = "block";
-                tosToggleParent.style.borderColor = "red";
-            } else {
-                tosToggleParent.style.borderColor = "white";
-                if (tosWasBlocked) {
-                    tosToggleReload.style.display = "block";
-                } else {
-                    tosToggleEnabled.style.display = "block";
+            function UpdateTimeOnSiteToggle(newState, saveSettings) {
+                if (disableTOS == newState) {
+                    return;
                 }
-            }
-        };
 
-        let disableTOS;
-        UpdateTimeOnSiteToggle(GetSetting(SETTING_DISABLE_TOS));
+                saveSettings = saveSettings ?? false;
+                if (saveSettings) {
+                    SetSetting(SETTING_DISABLE_TOS, newState)
+                }
 
-        setInterval(() => {
+                disableTOS = newState;
+
+                GM_webRequest([{ selector: '*/tos/track', action: { cancel: disableTOS }}], function() {
+                    tosWasBlocked = true;
+                    tosToggleParent.style.borderWidth = "2px";
+                });
+
+                tosToggleEnabled.style.display = "none";
+                tosToggleDisabled.style.display = "none";
+                tosToggleReload.style.display = "none";
+
+                if (disableTOS) {
+                    tosToggleDisabled.style.display = "block";
+                    tosToggleParent.style.borderColor = "red";
+                } else {
+                    tosToggleParent.style.borderColor = "white";
+                    if (tosWasBlocked) {
+                        tosToggleReload.style.display = "block";
+                    } else {
+                        tosToggleEnabled.style.display = "block";
+                    }
+                }
+            };
+
+            let disableTOS;
             UpdateTimeOnSiteToggle(GetSetting(SETTING_DISABLE_TOS));
-        }, 1000);
-    })();
+
+            setInterval(() => {
+                UpdateTimeOnSiteToggle(GetSetting(SETTING_DISABLE_TOS));
+            }, 1000);
+        })();
+    }
 })();
