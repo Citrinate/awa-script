@@ -6,6 +6,7 @@ Features:
 
 * Adds a countdown timer indicating when Artifacts can be swapped out
 * Adds a countdown timer indicating when the Game Vault will open
+* Adds a button for running [jkmartindale's Twitch Fix](https://github.com/jkmartindale/alienware-arena-fix) to the Alienware Twitch extension
 * Gives you the option to browse the site without earning "Time on Site" ARP *(only works in Tampermonkey)*
 
 ## Installation
