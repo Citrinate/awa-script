@@ -1,4 +1,9 @@
-# AWA Script
+# This script is no longer being maintained
+
+> [!WARNING]
+> The usage of userscripts on Alienware Arena could potentially result in bans.  As I can't guarantee that this script is safe to use, I've decided to stop developing it.  Use at your own risk.
+
+## AWA Script
 
 A userscript for Alienware Arena
 
