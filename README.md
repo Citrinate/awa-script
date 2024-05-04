@@ -11,7 +11,7 @@ Features:
 
 ## Installation
 
-1. Install a userscript manager like [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/)
+1. Install a userscript manager like [Tampermonkey](https://www.tampermonkey.net/)
 2. Go [here](https://github.com/Citrinate/awa-script/raw/main/code.user.js) and click "Install"
 
 ## Screenshots
