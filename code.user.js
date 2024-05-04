@@ -6,7 +6,6 @@
 // @author       Citrinate
 // @match        *://*.alienwarearena.com/*
 // @match        *://ehc5ey5g9hoehi8ys54lr6eknomqgr.ext-twitch.tv/*
-// @connect      raw.githubusercontent.com
 // @connect      alienware.jkmartindale.dev
 // @grant        GM_getValue
 // @grant        GM_setValue
@@ -21,6 +20,8 @@
 
 (function() {
 	'use strict';
+
+	const VAULT_OPENS_AT = Date.parse("2024-05-24 19:00:00 UTC"); // This needs to be manually updated every month
 
 	//#region Settings
 	const SETTING_DISABLE_TOS = "SETTING_DISABLE_TOS";
@@ -158,10 +159,7 @@
 	if (currentPage == PAGE_VAULT) {
 		//#region Vault Countdown
 		// Add countdown timer indicating when the game vault will open
-		GM_fetch({"url": "https://raw.githubusercontent.com/Citrinate/awa-script/main/vault_time.txt", method: 'GET'})
-			.then(response => Date.parse(response.responseText))
-			.then((vaultOpensAt) => WaitForElm('.marketplace-sidebar-text')
-			.then((marketplaceSidebar) => {
+		WaitForElm('.marketplace-sidebar-text').then((marketplaceSidebar) => {
 
 			//#region UI
 			let vaultCountdownParent = document.createElement("div");
@@ -182,7 +180,7 @@
 
 			let intervalID;
 			let UpdateVaultTimer = function() {
-				let millisecondsRemaining = Math.max(0, (vaultOpensAt - new Date().getTime()));
+				let millisecondsRemaining = Math.max(0, (VAULT_OPENS_AT - new Date().getTime()));
 				if (millisecondsRemaining == 0) {
 					if (intervalID) {
 						marketplaceSidebar.parentElement.removeChild(vaultCountdownParent);
@@ -199,8 +197,6 @@
 
 			UpdateVaultTimer();
 			intervalID = setInterval(UpdateVaultTimer, 1000);
-		})).catch((err) => {
-			console.log(err);
 		});
 		//#endregion
 	}
